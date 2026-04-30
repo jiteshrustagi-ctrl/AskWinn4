@@ -31,17 +31,26 @@ Platform name: **AskWinn**.
 | 3 | 2026-04-23 | Rebrand AskWinn + contact_number on quote + Accept Winner | 30/30 |
 | 4 | 2026-04-30 | Guided RFQ wizard (Beauty/Textile/Electronics) + file uploads | 45/45 |
 | 5 | 2026-04-30 | Vendor workflow Phases 1-5 (KYC, metrics, anonymisation, status flow, score+badges); ISSUE overline removed | 59/59 |
+| 6 | 2026-04-30 | P0+P1 — Save Favourites, Public RFQ share link, Chat file attachments | 97/97 |
 
-### 2026-04-30 — Vendor workflow (iteration 5)
-- **Phase 1 KYC**: pan_number, gst_number, business_address, factory_city, factory_state, years_in_operation, factory_video_url (URL), catalogue_url, availability_status (active/paused) on AgentProfile + UI in AgentProfileEdit
-- **Phase 2 Vendor Dashboard**: GET /api/agents/me/metrics → 6 tiles (RFQs received, Active bids, Orders won, Earnings, Vendor score, Reviews)
-- **Phase 3 anonymisation**: agent viewing an RFQ sees 'Verified Buyer' + competing quotes as 'Anonymous bidder' with no pitch text; identity revealed only to buyer-owner, admin, and winning agent
-- **Phase 3 Pass** (POST /api/rfqs/{id}/pass): RFQ removed from that agent's list
-- **Phase 3 sample fields** on quote form: sample_available + sample_cost_usd
-- **Phase 4 status flow**: Confirmed → Packed → Dispatched (+optional tracking URL) → Delivered. Endpoints validate role + monotonic forward transitions. Agent drives until dispatched; buyer marks delivered.
-- **Phase 5 Vendor Score**: rating*10 + win_rate*30 + verified bonus, capped at 100. Auto-recalculated on quote submission, accept, and delivery.
-- **Phase 5 Badges**: top_vendor (win_rate≥0.4, ≥3 quotes), fast_responder (avg_response<4h), high_quality (rating≥4.5, ≥3 reviews); rendered on dashboard, profile, and quote cards.
-- **Landing**: removed "ISSUE Nº01 — EDITORIAL SOURCING" overline.
+### 2026-04-30 — Iteration 6: Save Favourites + Public RFQ + Chat attachments
+- **P0 Save Favourites** (`favourites` collection): buyers bookmark agents
+  - `POST /api/favourites/{agent_id}` — idempotent add (upsert + $setOnInsert)
+  - `DELETE /api/favourites/{agent_id}` — remove
+  - `GET /api/favourites` — list with full agent docs, newest first
+  - `GET /api/favourites/ids` — fast id-only list for UI cache
+  - Frontend: `<FavouriteButton agentId>` on AgentCard + AgentDetail; new `/favourites` page; nav "Saved" link for buyers
+- **P0 Public Shareable RFQ** (`share_token` field on `rfqs`):
+  - `POST /api/rfqs/{id}/share` — generates `secrets.token_urlsafe(16)`, idempotent (returns existing)
+  - `DELETE /api/rfqs/{id}/share` — revoke
+  - `GET /api/public/rfqs/{token}` — sanitised read-only payload (NO buyer_id, NO attachments storage paths, NO bidder identities; only title/brief/qty/budget/timeline/structured-requirements/attachment_count/quote_count)
+  - Frontend: Share panel on RFQDetail (copy/revoke); `/p/rfq/:token` public page with editorial layout + bid CTA
+- **P1 Chat file attachments**:
+  - `Message.attachments: List[dict]`; body or attachment required
+  - `POST /api/messages/attachment?recipient_id=X` — uploads to Emergent Object Storage (`askwinn/messages/{thread_id}/{file_id}.{ext}`); same 20MB cap + ALLOWED_EXTS as RFQ
+  - `POST /api/messages` accepts `attachments: [...]`
+  - `GET /api/messages/{message_id}/attachment/{file_id}` — sender/recipient/admin only (403 otherwise); cookie/Bearer/`?auth=` auth modes
+  - Frontend: Paperclip icon in composer, pending-attachments tray with remove, attachment cards in messages with download
 
 ### Stubbed (pending external integrations)
 - Razorpay onboarding fee (Phase 1.4) and escrow (Phase 4.12, 4.14) — needs key
@@ -52,22 +61,24 @@ Platform name: **AskWinn**.
 ## Prioritized backlog
 
 ### P0
-- Buyer "save favourites" agent list
-- Public shareable RFQ link
+- ✅ ~~Buyer "save favourites" agent list~~ (iter 6)
+- ✅ ~~Public shareable RFQ link~~ (iter 6)
 
 ### P1
+- ✅ ~~File attachments inside chat threads~~ (iter 6)
 - Resend email notifications (needs key)
 - Razorpay onboarding fee + escrow at sample order
 - WhatsApp notifications (Wati/Interakt)
-- File attachments inside chat threads
 - Structured forms for remaining categories
 
 ### P2
 - Stripe escrow (alternative if buyers are global)
 - Self-hosted Ollama bid evaluator
 - Repeat order & referral credit system (Phase 5.17)
+- Optional expiry / TTL on RFQ share tokens
+- Per-message attachment count cap (currently unlimited per thread)
 
 ## Integrations
 - Emergent Google OAuth — login
 - Emergent Universal LLM Key — Claude Sonnet 4.5 (agent match) + Gemini 2.5 Flash Lite (bid eval)
-- Emergent Object Storage — RFQ attachments
+- Emergent Object Storage — RFQ attachments, message attachments
