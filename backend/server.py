@@ -19,6 +19,7 @@ load_dotenv(ROOT_DIR / ".env")
 from bid_evaluator import evaluate_bids as evaluate_bids_llm  # noqa: E402
 from rfq_schemas import schema_for, CATEGORY_SCHEMAS  # noqa: E402
 from storage import init_storage, put_object, get_object, ALLOWED_EXTS, MAX_FILE_SIZE, MIME_TYPES, APP_NAME  # noqa: E402
+from blueprints import NICHES, blueprint_for, niche_for  # noqa: E402
 
 mongo_url = os.environ["MONGO_URL"]
 client = AsyncIOMotorClient(mongo_url)
@@ -185,6 +186,10 @@ class Review(BaseModel):
     buyer_id: str
     buyer_name: str
     rating: int
+    timeliness: int = 0
+    quality: int = 0
+    communication: int = 0
+    value: int = 0
     comment: str
     created_at: datetime
 
@@ -192,6 +197,17 @@ class Review(BaseModel):
 class ReviewInput(BaseModel):
     rating: int
     comment: str
+    timeliness: int = 0
+    quality: int = 0
+    communication: int = 0
+    value: int = 0
+
+
+class BuyerProfileInput(BaseModel):
+    niche: str = ""
+    sub_category: str = ""
+    business_model: str = ""
+    chat_answers: dict[str, Any] = {}
 
 
 # ---------- Auth helpers ----------
@@ -1039,6 +1055,10 @@ async def create_review(agent_id: str, inp: ReviewInput, user: dict = Depends(ge
         "buyer_id": user["user_id"],
         "buyer_name": user["name"],
         "rating": inp.rating,
+        "timeliness": inp.timeliness,
+        "quality": inp.quality,
+        "communication": inp.communication,
+        "value": inp.value,
         "comment": inp.comment,
         "created_at": datetime.now(timezone.utc).isoformat(),
     })
@@ -1084,6 +1104,42 @@ async def admin_stats(user: dict = Depends(get_current_user)):
         "rfqs": await db.rfqs.count_documents({}),
         "quotes": await db.quotes.count_documents({}),
     }
+
+
+# ---------- Buyer funnel: Niches & Blueprint ----------
+@api.get("/niches")
+async def list_niches():
+    return NICHES
+
+
+@api.get("/niches/{niche_key}")
+async def get_niche(niche_key: str):
+    n = niche_for(niche_key)
+    if not n:
+        raise HTTPException(404, "Niche not found")
+    return n
+
+
+@api.get("/blueprints/{niche_key}/{sub_category}")
+async def get_blueprint(niche_key: str, sub_category: str):
+    n = niche_for(niche_key)
+    if not n:
+        raise HTTPException(404, "Niche not found")
+    return blueprint_for(niche_key, sub_category)
+
+
+@api.put("/users/me/profile")
+async def update_buyer_profile(inp: BuyerProfileInput, user: dict = Depends(get_current_user)):
+    await db.users.update_one(
+        {"user_id": user["user_id"]},
+        {"$set": {
+            "niche_preference": inp.niche,
+            "sub_category_preference": inp.sub_category,
+            "business_model": inp.business_model,
+            "chat_answers": inp.chat_answers,
+        }},
+    )
+    return await db.users.find_one({"user_id": user["user_id"]}, {"_id": 0})
 
 
 # ---------- Public ----------

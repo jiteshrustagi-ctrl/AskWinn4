@@ -18,6 +18,10 @@ import Messages from "@/pages/Messages";
 import AdminDashboard from "@/pages/AdminDashboard";
 import Favourites from "@/pages/Favourites";
 import PublicRFQ from "@/pages/PublicRFQ";
+import StartNiche from "@/pages/StartNiche";
+import StartChat from "@/pages/StartChat";
+import SubCategorySelect from "@/pages/SubCategorySelect";
+import Blueprint from "@/pages/Blueprint";
 
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
@@ -51,6 +55,10 @@ function AppRouter() {
       <Route path="/admin" element={<ProtectedRoute roles={["admin"]}><AdminDashboard /></ProtectedRoute>} />
       <Route path="/favourites" element={<ProtectedRoute roles={["buyer"]}><Favourites /></ProtectedRoute>} />
       <Route path="/p/rfq/:token" element={<PublicRFQ />} />
+      <Route path="/start" element={<StartNiche />} />
+      <Route path="/start/chat" element={<StartChat />} />
+      <Route path="/onboarding/sub-category" element={<ProtectedRoute roles={["buyer"]}><SubCategorySelect /></ProtectedRoute>} />
+      <Route path="/blueprint/:niche/:subCategory" element={<ProtectedRoute roles={["buyer"]}><Blueprint /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { ArrowUpRight, Zap, ShieldCheck, MessageSquare, Sparkles, Briefcase, Factory } from "lucide-react";
@@ -17,6 +17,7 @@ const CATEGORIES = [
 
 export default function Landing() {
   const [featured, setFeatured] = useState([]);
+  const nav = useNavigate();
 
   useEffect(() => {
     axios.get(`${API}/agents?verified=true`).then((r) => setFeatured(r.data.slice(0, 3))).catch(() => {});
@@ -28,6 +29,10 @@ export default function Landing() {
     else localStorage.removeItem("askwinn_desired_role");
     const redirectUrl = window.location.origin + "/dashboard";
     window.location.href = `https://auth.emergentagent.com/?redirect=${encodeURIComponent(redirectUrl)}`;
+  };
+
+  const startBuyerFunnel = () => {
+    nav("/start");
   };
 
   return (
@@ -46,8 +51,8 @@ export default function Landing() {
               AskWinn is the curated marketplace of end-to-end manufacturing agents for founders who'd rather build the product than manage the pipeline.
             </p>
             <div className="mt-12 flex flex-wrap gap-4">
-              <button onClick={() => startLogin("buyer")} className="btn-primary" data-testid="hero-buyer-btn">
-                <Briefcase className="w-4 h-4" /> I'm a buyer
+              <button onClick={startBuyerFunnel} className="btn-primary" data-testid="hero-buyer-btn">
+                <Briefcase className="w-4 h-4" /> I'm a buyer — start guided
               </button>
               <button onClick={() => startLogin("agent")} className="btn-accent" data-testid="hero-agent-btn">
                 <Factory className="w-4 h-4" /> I'm a service provider
@@ -203,8 +208,8 @@ export default function Landing() {
             <h2 className="font-serif text-5xl lg:text-7xl font-light leading-[0.95] tracking-tight mb-10">
               Your next SKU is<br />one RFQ away.
             </h2>
-            <button onClick={() => startLogin(null)} className="btn-accent" data-testid="cta-start-btn">
-              Sign in with Google <ArrowUpRight className="w-4 h-4" />
+            <button onClick={startBuyerFunnel} className="btn-accent" data-testid="cta-start-btn">
+              Start as a buyer <ArrowUpRight className="w-4 h-4" />
             </button>
           </div>
         </div>

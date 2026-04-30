@@ -16,6 +16,8 @@ export default function AgentDetail() {
   const [data, setData] = useState(null);
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState("");
+  const [dims, setDims] = useState({ timeliness: 5, quality: 5, communication: 5, value: 5 });
+  const [showCrossSell, setShowCrossSell] = useState(false);
 
   useEffect(() => {
     axios.get(`${API}/agents/${agentId}`).then((r) => setData(r.data));
@@ -27,11 +29,19 @@ export default function AgentDetail() {
   const submitReview = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API}/agents/${agentId}/reviews`, { rating: Number(rating), comment });
+      await axios.post(`${API}/agents/${agentId}/reviews`, {
+        rating: Number(rating),
+        comment,
+        timeliness: Number(dims.timeliness),
+        quality: Number(dims.quality),
+        communication: Number(dims.communication),
+        value: Number(dims.value),
+      });
       toast.success("Review posted");
       setComment("");
       const r = await axios.get(`${API}/agents/${agentId}`);
       setData(r.data);
+      setShowCrossSell(true);
     } catch (err) {
       toast.error(err.response?.data?.detail || "Failed");
     }
@@ -158,8 +168,8 @@ export default function AgentDetail() {
           {user?.role === "buyer" && (
             <form onSubmit={submitReview} className="editorial-card p-8" data-testid="review-form">
               <div className="overline mb-4">LEAVE A REVIEW</div>
-              <div className="mb-4">
-                <label className="overline mb-2 block">Rating</label>
+              <div className="mb-6">
+                <label className="overline mb-2 block">Overall rating</label>
                 <div className="flex gap-2">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <button type="button" key={n} onClick={() => setRating(n)} data-testid={`star-${n}`}>
@@ -167,6 +177,25 @@ export default function AgentDetail() {
                     </button>
                   ))}
                 </div>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-5 mb-6">
+                {["timeliness", "quality", "communication", "value"].map((k) => (
+                  <div key={k} data-testid={`dim-${k}`}>
+                    <label className="overline mb-2 block capitalize">{k}</label>
+                    <div className="flex gap-1">
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <button
+                          type="button"
+                          key={n}
+                          onClick={() => setDims({ ...dims, [k]: n })}
+                          data-testid={`dim-${k}-${n}`}
+                        >
+                          <Star className={`w-5 h-5 ${n <= dims[k] ? "fill-klein text-klein" : "text-[--border-soft]"}`} />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                ))}
               </div>
               <textarea
                 className="input-underline min-h-[100px]"
@@ -178,6 +207,35 @@ export default function AgentDetail() {
               />
               <button type="submit" className="btn-primary mt-6" data-testid="review-submit">Post review</button>
             </form>
+          )}
+
+          {showCrossSell && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-6 bg-ink/60 backdrop-blur-sm" data-testid="cross-sell-modal">
+              <div className="bg-bone max-w-lg w-full p-10 border-l-4 border-l-klein relative">
+                <button
+                  onClick={() => setShowCrossSell(false)}
+                  className="absolute top-4 right-4 font-mono text-xs underline text-[--muted-foreground] hover:text-ink"
+                  data-testid="cross-sell-close"
+                >
+                  CLOSE ×
+                </button>
+                <div className="overline mb-3">§ ON A ROLL?</div>
+                <h3 className="font-serif text-4xl font-light leading-tight tracking-tight mb-3">
+                  Need <em className="text-klein not-italic">packaging</em> too?
+                </h3>
+                <p className="text-sm text-[--muted-foreground] mb-6">
+                  Most brands at your stage need 2–3 supplier types. Start a new RFQ — same buyer profile, brand-new brief.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  <Link to="/start" className="btn-primary" data-testid="cross-sell-start">
+                    Start a new brief
+                  </Link>
+                  <Link to="/directory?category=Packaging" className="btn-outline" data-testid="cross-sell-packaging">
+                    Browse packaging agents
+                  </Link>
+                </div>
+              </div>
+            </div>
           )}
         </section>
       </div>
