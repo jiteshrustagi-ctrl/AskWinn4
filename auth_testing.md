@@ -42,7 +42,7 @@ await page.context.add_cookies([{
     "secure": True,
     "sameSite": "None"
 }])
-await page.goto("https://product-agents.preview.emergentagent.com/dashboard")
+await page.goto("https://doc-verify-25.preview.emergentagent.com/dashboard")
 ```
 
 ## Roles to test

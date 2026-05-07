@@ -107,14 +107,14 @@ export default function Landing() {
             </h2>
           </div>
           <div className="lg:col-span-7 lg:col-start-6 text-lg text-[--muted-foreground] leading-relaxed">
-            From a half-sketched idea to a verified manufacturing partner — without Alibaba tabs, WhatsApp chaos, or agents who go dark.
+            From a half-sketched idea to a verified manufacturing partner — without Alibaba tabs, WhatsApp chaos, or manufacturers who go dark.
           </div>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {[
             { i: Zap, t: "Post an RFQ", d: "Drop your spec — quantity, timeline, budget. We keep it private by default.", tag: "STEP 01" },
-            { i: Sparkles, t: "AI curates agents", d: "Claude scans 240+ vetted partners and surfaces the three best fits for your brief.", tag: "STEP 02" },
-            { i: MessageSquare, t: "Quote → chat → ship", d: "Agents respond in-thread. Compare quotes, lead times, and start the build.", tag: "STEP 03" },
+            { i: Sparkles, t: "AI curates manufacturers", d: "Claude scans 240+ vetted partners and surfaces the three best fits for your brief.", tag: "STEP 02" },
+            { i: MessageSquare, t: "Quote → chat → ship", d: "Manufacturers respond in-thread. Compare quotes, lead times, and start the build.", tag: "STEP 03" },
           ].map((s, i) => (
             <div key={i} className="editorial-card p-8" style={{ animation: `reveal 0.6s ease-out ${i * 100}ms both` }}>
               <div className="overline mb-6">{s.tag}</div>
@@ -191,7 +191,7 @@ export default function Landing() {
         <div className="lg:col-span-5 lg:col-start-8 order-1 lg:order-2">
           <div className="overline mb-4">§ 04 — Trust</div>
           <h2 className="font-serif text-5xl lg:text-6xl font-light leading-[0.95] tracking-tight mb-8">
-            Every agent, <em className="text-klein not-italic">verified</em>.
+            Every manufacturer, <em className="text-klein not-italic">verified</em>.
           </h2>
           <p className="text-lg text-[--muted-foreground] mb-8 leading-relaxed">
             Our ops team checks business licences, factory audits, and capacity against actual orders. You won't find drop-shippers wearing factory uniforms here.

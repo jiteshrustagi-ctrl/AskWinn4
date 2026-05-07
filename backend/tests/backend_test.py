@@ -7,7 +7,7 @@ import pytest
 from pymongo import MongoClient
 from datetime import datetime, timezone, timedelta
 
-BASE = os.environ.get("REACT_APP_BACKEND_URL", "https://product-agents.preview.emergentagent.com").rstrip("/")
+BASE = os.environ.get("REACT_APP_BACKEND_URL", "https://doc-verify-25.preview.emergentagent.com").rstrip("/")
 API = f"{BASE}/api"
 mongo = MongoClient(os.environ.get("MONGO_URL", "mongodb://localhost:27017"))
 db = mongo[os.environ.get("DB_NAME", "test_database")]
