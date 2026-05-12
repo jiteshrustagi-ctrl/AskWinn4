@@ -232,6 +232,15 @@ export default function RFQDetail() {
           </div>
         )}
 
+        {rfq.requirements_text && rfq.requirements_text.trim() && (
+          <div className="editorial-card p-8 mb-12" data-testid="rfq-requirements-text">
+            <div className="overline mb-5">§ DETAILED REQUIREMENTS</div>
+            <div className="prose max-w-none">
+              <pre className="whitespace-pre-wrap text-base leading-relaxed font-sans">{rfq.requirements_text}</pre>
+            </div>
+          </div>
+        )}
+
         {(rfq.attachments || []).length > 0 && (
           <div className="editorial-card p-8 mb-12" data-testid="rfq-attachments">
             <div className="overline mb-5">§ ATTACHMENTS ({rfq.attachments.length})</div>
@@ -264,7 +273,7 @@ export default function RFQDetail() {
             <div className="flex justify-between items-center mb-6">
               <div>
                 <div className="overline mb-2">AI MATCH</div>
-                <h2 className="font-serif text-3xl tracking-tight">Let Claude find your fit.</h2>
+                <h2 className="font-serif text-3xl tracking-tight">Let AI find your fit.</h2>
               </div>
               <button onClick={runMatch} disabled={matching} className="btn-accent" data-testid="run-match-btn">
                 <Sparkles className="w-4 h-4" /> {matching ? "Matching…" : "Run AI match"}

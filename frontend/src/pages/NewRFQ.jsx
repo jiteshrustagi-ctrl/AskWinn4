@@ -51,6 +51,8 @@ export default function NewRFQ() {
     timeline: answers.timeline || TIMELINE_OPTIONS[1],
   });
   const [requirements, setRequirements] = useState({});
+  const [requirementsFormat, setRequirementsFormat] = useState("structured"); // "structured" or "text"
+  const [requirementsText, setRequirementsText] = useState("");
   const [schema, setSchema] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [createdRfq, setCreatedRfq] = useState(null);
@@ -77,12 +79,22 @@ export default function NewRFQ() {
     e.preventDefault();
     setSubmitting(true);
     try {
-      const r = await axios.post(`${API}/rfqs`, {
+      const payload = {
         ...form,
         quantity: Number(form.quantity),
         budget_usd: BUDGET_FROM_RANGE[form.budget_range] || 300000,
-        requirements,
-      });
+      };
+      
+      // Handle requirements based on format
+      if (requirementsFormat === "text") {
+        payload.requirements_text = requirementsText;
+        payload.requirements = {};
+      } else {
+        payload.requirements = requirements;
+        payload.requirements_text = "";
+      }
+      
+      const r = await axios.post(`${API}/rfqs`, payload);
       setCreatedRfq(r.data);
       setStep(3);
       toast.success("RFQ created. Add attachments next.");
@@ -172,7 +184,29 @@ export default function NewRFQ() {
 
         {step === 2 && (
           <form onSubmit={submitRfq} className="space-y-6" data-testid="rfq-form-step2">
-            {schema ? (
+            {schema && (
+              <div className="mb-6">
+                <div className="overline mb-3">REQUIREMENTS FORMAT</div>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setRequirementsFormat("structured")}
+                    className={`px-4 py-2 border ${requirementsFormat === "structured" ? "border-klein bg-klein/5 text-klein" : "border-[--border-soft]"}`}
+                  >
+                    Structured table
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setRequirementsFormat("text")}
+                    className={`px-4 py-2 border ${requirementsFormat === "text" ? "border-klein bg-klein/5 text-klein" : "border-[--border-soft]"}`}
+                  >
+                    Free-form text
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {requirementsFormat === "structured" && schema ? (
               <>
                 <div className="overline">{schema.label?.toUpperCase()}</div>
                 <p className="text-sm text-[--muted-foreground] mb-4">Specific spec questions help us match you to the right factory faster.</p>
@@ -200,6 +234,17 @@ export default function NewRFQ() {
                     )}
                   </div>
                 ))}
+              </>
+            ) : requirementsFormat === "text" ? (
+              <>
+                <div className="overline">DETAILED REQUIREMENTS (FREE-FORM)</div>
+                <p className="text-sm text-[--muted-foreground] mb-4">Describe all your requirements in detail. Manufacturers will review and indicate which they can fulfill.</p>
+                <textarea
+                  className="input-underline min-h-[200px]"
+                  value={requirementsText}
+                  onChange={(e) => setRequirementsText(e.target.value)}
+                  placeholder="Example:&#10;- Material: 100% organic cotton&#10;- Certification: GOTS required&#10;- Packaging: Biodegradable poly bags&#10;- Labeling: Custom woven labels&#10;- Timeline: 45 days to delivery"
+                />
               </>
             ) : (
               <div className="editorial-card p-6">

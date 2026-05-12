@@ -117,6 +117,7 @@ class RFQ(BaseModel):
     status: Literal["open", "closed"] = "open"
     winner_quote_id: Optional[str] = None
     requirements: dict[str, Any] = {}
+    requirements_text: str = ""
     attachments: List[dict] = []
     created_at: datetime
 
@@ -130,6 +131,7 @@ class RFQInput(BaseModel):
     budget_usd: float
     timeline: str
     requirements: dict[str, Any] = {}
+    requirements_text: str = ""
 
 
 class Quote(BaseModel):
