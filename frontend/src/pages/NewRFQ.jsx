@@ -80,7 +80,7 @@ export default function NewRFQ() {
       const r = await axios.post(`${API}/rfqs`, {
         ...form,
         quantity: Number(form.quantity),
-        budget_usd: Number(form.budget_usd),
+        budget_usd: BUDGET_FROM_RANGE[form.budget_range] || 300000,
         requirements,
       });
       setCreatedRfq(r.data);

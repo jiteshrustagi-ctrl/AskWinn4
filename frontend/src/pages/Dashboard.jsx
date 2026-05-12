@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Navbar from "@/components/Navbar";
 import axios from "axios";
 import { useAuth, API } from "@/context/AuthContext";
-import { PlusCircle, FileText, MessageSquare, TrendingUp, Settings, DollarSign, Trophy, Users, Banknote, Activity } from "lucide-react";
+import { PlusCircle, FileText, MessageSquare, TrendingUp, Settings, IndianRupee, Trophy, Users, Banknote, Activity } from "lucide-react";
 import VendorBadges from "@/components/VendorBadges";
 
 export default function Dashboard() {
@@ -57,8 +57,8 @@ export default function Dashboard() {
             <Tile icon={Activity} label="RFQs received" value={vmetrics.rfqs_received} />
             <Tile icon={FileText} label="Active bids" value={vmetrics.active_bids} />
             <Tile icon={Trophy} label="Orders won" value={vmetrics.orders_won} />
-            <Tile icon={Banknote} label="Earnings (USD)" value={`$${(vmetrics.earnings_usd || 0).toLocaleString()}`} />
-            <Tile icon={DollarSign} label="Vendor score" value={`${vmetrics.vendor_score}/100`} highlight />
+            <Tile icon={Banknote} label="Earnings (₹)" value={`₹${(vmetrics.earnings_inr || 0).toLocaleString()}`} />
+            <Tile icon={IndianRupee} label="Vendor score" value={`${vmetrics.vendor_score}/100`} highlight />
             <Tile icon={Users} label="Reviews" value={`${(vmetrics.rating || 0).toFixed(1)}★ (${vmetrics.reviews_count})`} />
           </div>
         )}

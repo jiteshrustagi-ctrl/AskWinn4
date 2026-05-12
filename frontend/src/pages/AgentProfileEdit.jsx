@@ -4,13 +4,14 @@ import { useAuth, API } from "@/context/AuthContext";
 import axios from "axios";
 import { toast } from "sonner";
 
-const CATEGORIES = ["Textile & Apparel", "Consumer Electronics", "Packaging", "Home Goods", "Beauty & Cosmetics", "Food & Beverage", "Hardware", "Toys & Games"];
+const CATEGORIES = ["Jewellery", "Apparel & Textile", "Beauty & Cosmetics", "Home Decor & Goods", "Food & Nutrition", "Fitness & Wellness", "Corporate Gifting", "Consumer Electronics"];
 const INDIAN_STATES = [
   "Andhra Pradesh", "Bihar", "Delhi", "Gujarat", "Haryana", "Karnataka", "Kerala",
   "Madhya Pradesh", "Maharashtra", "Punjab", "Rajasthan", "Tamil Nadu", "Telangana",
   "Uttar Pradesh", "West Bengal", "Other",
 ];
 const YEARS_OPTIONS = ["0-2 Years", "3-5 Years", "6-10 Years", "10+ Years"];
+const SERVICE_OPTIONS = ["Product Design", "Sampling", "Tooling", "Packaging", "Assembly", "Quality Control", "Warehousing", "Logistics", "Compliance Support"];
 
 const yearsLabelToInt = (label) => ({ "0-2 Years": 1, "3-5 Years": 4, "6-10 Years": 8, "10+ Years": 12 }[label] || 0);
 const intToYearsLabel = (n) => {
@@ -32,7 +33,7 @@ export default function AgentProfileEdit() {
         bio: d.bio || "",
         categories: d.categories || [],
         country: "India",
-        services: (d.services || []).join(", "),
+        services: d.services || [],
         certifications: (d.certifications || []).join(", "),
         portfolio_images: (d.portfolio_images || []).join("\n"),
         min_order_qty: d.min_order_qty || 0,
@@ -69,7 +70,7 @@ export default function AgentProfileEdit() {
       regions: ["India"],
       min_order_qty: Number(form.min_order_qty) || 0,
       years_in_operation: yearsLabelToInt(form.years_band),
-      services: form.services.split(",").map((s) => s.trim()).filter(Boolean),
+      services: Array.isArray(form.services) ? form.services : [],
       certifications: form.certifications.split(",").map((s) => s.trim()).filter(Boolean),
       portfolio_images: form.portfolio_images.split("\n").map((s) => s.trim()).filter(Boolean),
       pan_number: form.pan_number,
@@ -184,8 +185,26 @@ export default function AgentProfileEdit() {
                 ))}
               </div>
             </F>
-            <F label="Services (comma-separated)">
-              <input className="input-underline" value={form.services} onChange={(e) => setForm({ ...form, services: e.target.value })} placeholder="Sampling, Tooling, Assembly, QC" data-testid="profile-services" />
+            <F label="Services offered">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {SERVICE_OPTIONS.map((service) => (
+                  <label key={service} className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={form.services.includes(service)}
+                      onChange={(e) => {
+                        if (e.target.checked) {
+                          setForm({ ...form, services: [...form.services, service] });
+                        } else {
+                          setForm({ ...form, services: form.services.filter((s) => s !== service) });
+                        }
+                      }}
+                      className="w-4 h-4"
+                    />
+                    <span className="text-sm">{service}</span>
+                  </label>
+                ))}
+              </div>
             </F>
             <F label="Certifications (comma-separated)">
               <input className="input-underline" value={form.certifications} onChange={(e) => setForm({ ...form, certifications: e.target.value })} placeholder="ISO 9001, BSCI, GOTS" data-testid="profile-certs" />
