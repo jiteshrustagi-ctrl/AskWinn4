@@ -11,34 +11,34 @@ const NICHE_PRODUCT_EXAMPLES = {
   beauty: "A vitamin-C niacinamide serum for sensitive skin",
   "home-decor": "Soy-wax candles in handmade ceramic vessels",
   electronics: "Bluetooth earbuds with active noise cancellation",
-  packaging: "Eco-kraft mailers for a beauty D2C brand",
+  "corporate-gifting": "Branded notebooks and tote bags for corporate events",
   food: "Single-origin millet snack bars",
-  toys: "A wooden Montessori activity board for toddlers",
+  fitness: "Natural rubber resistance bands with brand logo",
 };
 
 const QUESTIONS = [
   {
     key: "product_idea",
-    bot: () => "Excellent choice. Let's define your execution strategy. What specific product category are we building?",
+    bot: () => "Great. What specific product are you building? Be as detailed as you like — the more specific, the better your manufacturer matches will be.",
     placeholderFn: (key) => `e.g. ${NICHE_PRODUCT_EXAMPLES[key] || "describe the product you want to build"}`,
     type: "text",
   },
   {
     key: "business_model",
     bot: () => "Got it. How will you sell — direct-to-consumer, wholesale, marketplace, or a mix?",
-    options: ["D2C / own website", "Marketplace (Amazon, Myntra)", "Wholesale / B2B", "Retail stores", "Subscription"],
+    options: ["D2C / own website", "Marketplace (Amazon, Myntra)", "Wholesale / B2B", "Retail stores"],
     type: "choice",
   },
   {
     key: "budget_range",
     bot: () => "What's your total budget for the first production run?",
-    options: ["Under ₹1 L", "₹1–5 L", "₹5–15 L", "₹15–50 L", "₹50 L+"],
+    options: ["₹1–5 L", "₹5–15 L", "₹15–50 L", "₹50 L+"],
     type: "choice",
   },
   {
     key: "timeline",
     bot: () => "Last one — when do you need stock in hand?",
-    options: ["ASAP (< 4 weeks)", "1–2 months", "2–4 months", "4+ months / flexible"],
+    options: ["1–4 weeks (discuss with team)", "1–2 months", "2–4 months", "4+ months / flexible"],
     type: "choice",
   },
 ];
@@ -64,12 +64,14 @@ export default function StartChat() {
     if (answers[q.key]) messages.push({ from: "user", text: answers[q.key] });
   }
   if (done) {
-    messages.push({ from: "bot", text: "Perfect. Your personalised AskWinn Blueprint is ready — sign in to unlock it." });
+    messages.push({ from: "bot", text: "Perfect. Your curated AskWinn Blueprint is ready — sign in to unlock it." });
   }
+
+  const [botTyping, setBotTyping] = useState(false);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  }, [step, draft, done]);
+  }, [step, draft, done, botTyping]);
 
   if (!niche) {
     return (
@@ -89,7 +91,11 @@ export default function StartChat() {
       sessionStorage.setItem("askwinn_funnel_answers", JSON.stringify(updated));
       setDone(true);
     } else {
-      setStep(step + 1);
+      setBotTyping(true);
+      setTimeout(() => {
+        setStep(step + 1);
+        setBotTyping(false);
+      }, 900);
     }
   };
 

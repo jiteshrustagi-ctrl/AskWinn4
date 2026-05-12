@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 export default function Footer() {
   return (
@@ -7,25 +8,24 @@ export default function Footer() {
         <div className="md:col-span-2">
           <div className="font-serif text-4xl tracking-tighter leading-none mb-4">Ask<span className="text-klein">Winn</span>.</div>
           <p className="text-sm text-[--muted-foreground] max-w-sm leading-relaxed">
-            The editorial marketplace for founders who ship. End-to-end manufacturing agents, curated.
+            India's managed marketplace for brand founders. Post a brief. Get competing bids from verified manufacturers.
           </p>
         </div>
         <div>
           <div className="overline mb-4">Platform</div>
           <ul className="space-y-2 text-sm">
-            <li>Agent Directory</li>
-            <li>Post an RFQ</li>
-            <li>AI Match</li>
-            <li>Verified Partners</li>
+            <li><Link to="/directory" className="hover:text-klein transition-colors">Manufacturer Directory</Link></li>
+            <li><Link to="/start" className="hover:text-klein transition-colors">Post an RFQ</Link></li>
+            <li><Link to="/directory?verified=true" className="hover:text-klein transition-colors">Verified Partners</Link></li>
           </ul>
         </div>
         <div>
           <div className="overline mb-4">Company</div>
           <ul className="space-y-2 text-sm">
-            <li>About</li>
-            <li>How it works</li>
-            <li>Trust & safety</li>
-            <li>Contact</li>
+            <li><Link to="/about" className="hover:text-klein transition-colors">About</Link></li>
+            <li><Link to="/how-it-works" className="hover:text-klein transition-colors">How it works</Link></li>
+            <li><Link to="/trust-safety" className="hover:text-klein transition-colors">Trust & safety</Link></li>
+            <li><Link to="/contact" className="hover:text-klein transition-colors">Contact</Link></li>
           </ul>
         </div>
       </div>

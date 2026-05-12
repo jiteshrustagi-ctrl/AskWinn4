@@ -33,8 +33,8 @@ export default function StartNiche() {
               Find the right <em className="text-klein not-italic">manufacturer</em>.
             </h1>
             <p className="text-lg text-[--muted-foreground] max-w-2xl">
-              Tell us what you're building and we'll match you with verified manufacturing agents.
-              Pick a category to start a 90-second guided brief.
+              Tell us what you're building and we'll match you with verified end-to-end manufacturers.
+              Pick a category to start your guided brief.
             </p>
           </div>
           <div className="lg:col-span-4 lg:col-start-9 hidden lg:block">
@@ -43,8 +43,8 @@ export default function StartNiche() {
               <ol className="space-y-3 text-sm">
                 <li><span className="font-mono text-klein mr-2">01.</span>Pick a niche</li>
                 <li><span className="font-mono text-klein mr-2">02.</span>Answer 3 quick questions</li>
-                <li><span className="font-mono text-klein mr-2">03.</span>Unlock your Business Blueprint</li>
-                <li><span className="font-mono text-klein mr-2">04.</span>Post your RFQ — bids in 24h</li>
+                <li><span className="font-mono text-klein mr-2">03.</span>Unlock your Blueprint</li>
+                <li><span className="font-mono text-klein mr-2">04.</span>Post your RFQ — manufacturers bid</li>
               </ol>
             </div>
           </div>

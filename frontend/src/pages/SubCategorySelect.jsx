@@ -40,17 +40,14 @@ export default function SubCategorySelect() {
 
   const next = async () => {
     if (!picked) return;
-    const isOther = picked === "__other__";
-    const finalSub = isOther ? otherText.trim() : picked;
-    if (isOther && !finalSub) return;
 
     // Lead-capture gate: require phone before unlocking blueprint (per AskWinn.xlsx)
     if (!user?.phone && !phone) {
-      sessionStorage.setItem("askwinn_pending_sub", finalSub);
+      sessionStorage.setItem("askwinn_pending_sub", picked);
       setShowPhoneGate(true);
       return;
     }
-    await proceedToBlueprint(finalSub);
+    await proceedToBlueprint(picked);
   };
 
   const submitPhone = async (e) => {
@@ -60,7 +57,7 @@ export default function SubCategorySelect() {
       alert("Please enter a valid phone / WhatsApp number");
       return;
     }
-    const finalSub = sessionStorage.getItem("askwinn_pending_sub") || (picked === "__other__" ? otherText.trim() : picked);
+    const finalSub = sessionStorage.getItem("askwinn_pending_sub") || picked;
     setShowPhoneGate(false);
     await refresh?.();
     await proceedToBlueprint(finalSub);
@@ -80,6 +77,8 @@ export default function SubCategorySelect() {
           Different sub-categories have wildly different MOQs, margins, and risks — pick the closest fit.
         </p>
 
+        <button onClick={() => nav(-1)} className="text-sm text-[--muted-foreground] hover:text-klein mb-6">← Back</button>
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6" data-testid="sub-category-grid">
           {niches.sub_categories.map((s) => (
             <button
@@ -89,34 +88,15 @@ export default function SubCategorySelect() {
               data-testid={`sub-cat-${s.replace(/\s+/g, "-").toLowerCase()}`}
             >
               <div className="font-mono text-[10px] text-[--muted-foreground] mb-3">SUB-CATEGORY</div>
-              <div className="font-serif text-2xl tracking-tight">{s}</div>
+              <div className="font-serif text-2xl tracking-tight">{s === "Colour cosmetics" ? "Makeup" : s}</div>
               {picked === s && <div className="overline text-[10px] text-klein mt-3">SELECTED ✓</div>}
             </button>
           ))}
-          <button
-            onClick={() => setPicked("__other__")}
-            className={`editorial-card p-7 text-left transition-all ${picked === "__other__" ? "border-klein border-2 bg-klein/5" : "border-dashed hover:border-ink"}`}
-            data-testid="sub-cat-other"
-          >
-            <div className="font-mono text-[10px] text-[--muted-foreground] mb-3">DON'T SEE IT?</div>
-            <div className="font-serif text-2xl tracking-tight">Other</div>
-            {picked === "__other__" && (
-              <input
-                autoFocus
-                className="input-underline mt-3 text-base"
-                placeholder="Tell us what you're sourcing"
-                value={otherText}
-                onChange={(e) => setOtherText(e.target.value)}
-                onClick={(e) => e.stopPropagation()}
-                data-testid="sub-cat-other-input"
-              />
-            )}
-          </button>
         </div>
 
         <button
           onClick={next}
-          disabled={!picked || busy || (picked === "__other__" && !otherText.trim())}
+          disabled={!picked || busy}
           className="btn-primary mt-6"
           data-testid="sub-cat-next-btn"
         >
@@ -130,10 +110,10 @@ export default function SubCategorySelect() {
             <Lock className="w-6 h-6 text-klein mb-4" />
             <div className="overline mb-3">§ ONE LAST STEP</div>
             <h3 className="font-serif text-3xl font-light leading-tight tracking-tight mb-3">
-              Where should we <em className="text-klein not-italic">WhatsApp</em> you the bids?
+              Your curated <em className="text-klein not-italic">Blueprint</em> is ready.
             </h3>
             <p className="text-sm text-[--muted-foreground] mb-6">
-              Once your RFQ goes live, manufacturers usually bid within 24 hours. We'll text you on this number — no spam, just bid notifications.
+              Enter your details to unlock your curated market report — MOQs, margins, manufacturing hubs, and the risks others miss.
             </p>
             <div className="flex items-center gap-3 mb-3">
               <Phone className="w-4 h-4 text-klein flex-shrink-0" />

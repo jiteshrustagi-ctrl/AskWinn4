@@ -63,37 +63,41 @@ export default function Landing() {
                 <MessageSquare className="w-4 h-4" /> Talk to an expert
               </a>
             </div>
-            <div className="mt-16 grid grid-cols-3 gap-6 max-w-xl">
-              <Stat n="240+" l="Verified manufacturers" />
-              <Stat n="38" l="Cities" />
-              <Stat n="$12M" l="RFQs matched" />
+            <div className="mt-16">
+              <p className="text-sm text-[--muted-foreground]">Currently onboarding verified manufacturers</p>
             </div>
           </div>
           <div className="lg:col-span-5 relative reveal-2">
-            <div className="relative aspect-[3/4] overflow-hidden">
-              <img src={HERO_TEXTURE} alt="Manufacturing materials" className="absolute inset-0 w-full h-full object-cover" />
-              <div className="absolute top-4 left-4 tag accent">NEW — AI MATCH</div>
-              <div className="absolute bottom-6 right-6 font-mono text-xs text-white/90">MAT_001 · STEEL + WEAVE</div>
-            </div>
-            <div className="absolute -bottom-8 -left-8 bg-bone border ink-border p-6 w-64 hidden lg:block">
-              <Sparkles className="w-5 h-5 text-klein mb-3" />
-              <div className="font-serif text-2xl leading-tight">AI-matched in 90 seconds.</div>
-              <div className="overline mt-3 text-[10px]">POWERED BY CLAUDE</div>
+            <div className="grid grid-cols-2 gap-3 auto-rows-min">
+              <div className="bg-white rounded-xl p-4 shadow-sm row-span-2 flex flex-col items-center justify-center gap-3">
+                <div className="text-4xl">👕</div>
+                <span className="text-xs font-bold uppercase bg-burn text-white px-2 py-0.5 rounded-full">YOUR LABEL</span>
+                <div className="text-xs text-[--muted-foreground]">Apparel</div>
+              </div>
+              <div className="bg-white rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2">
+                <div className="text-3xl">🧴</div>
+                <span className="text-[10px] font-bold uppercase bg-burn text-white px-2 py-0.5 rounded-full">YOUR BRAND</span>
+                <div className="text-[11px] text-[--muted-foreground]">Beauty</div>
+              </div>
+              <div className="bg-white rounded-xl p-4 shadow-sm flex flex-col items-center justify-center gap-2">
+                <div className="text-3xl">📦</div>
+                <span className="text-[10px] font-bold uppercase bg-burn text-white px-2 py-0.5 rounded-full">CUSTOM PRINT</span>
+                <div className="text-[11px] text-[--muted-foreground]">Packaging</div>
+              </div>
+              <div className="bg-white rounded-xl p-4 shadow-sm col-span-2 flex flex-row items-center justify-center gap-4">
+                <div className="text-3xl">🕯️</div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold uppercase bg-burn text-white px-2 py-0.5 rounded-full self-start">YOUR LABEL</span>
+                  <div className="text-[11px] text-[--muted-foreground]">Home Goods</div>
+                </div>
+                <div className="text-3xl">🥜</div>
+                <div className="flex flex-col gap-1">
+                  <span className="text-[10px] font-bold uppercase bg-burn text-white px-2 py-0.5 rounded-full self-start">YOUR BRAND</span>
+                  <div className="text-[11px] text-[--muted-foreground]">Food & Snacks</div>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* MARQUEE */}
-      <section className="border-y border-[--border-soft] overflow-hidden py-6 bg-ink text-white">
-        <div className="marquee whitespace-nowrap font-mono text-sm tracking-[0.2em] uppercase">
-          {Array.from({ length: 2 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-12 pr-12">
-              {["Textile · Shenzhen", "Packaging · Istanbul", "Electronics · Taipei", "Ceramics · Porto", "Leather · Florence", "Cosmetics · Seoul", "Hardware · Guadalajara"].map((t) => (
-                <span key={t} className="flex items-center gap-12"><span>{t}</span><span className="text-burn">◆</span></span>
-              ))}
-            </div>
-          ))}
         </div>
       </section>
 
@@ -103,17 +107,17 @@ export default function Landing() {
           <div className="lg:col-span-4">
             <div className="overline mb-4">§ 01 — Method</div>
             <h2 className="font-serif text-5xl lg:text-6xl font-light leading-[0.95] tracking-tight">
-              Three moves.<br />One clean line.
+              Three steps.<br />Zero chaos.
             </h2>
           </div>
           <div className="lg:col-span-7 lg:col-start-6 text-lg text-[--muted-foreground] leading-relaxed">
-            From a half-sketched idea to a verified manufacturing partner — without Alibaba tabs, WhatsApp chaos, or manufacturers who go dark.
+            Sourcing a manufacturer is the part nobody tells you about. We made it the easiest part.
           </div>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {[
             { i: Zap, t: "Post an RFQ", d: "Drop your spec — quantity, timeline, budget. We keep it private by default.", tag: "STEP 01" },
-            { i: Sparkles, t: "AI curates manufacturers", d: "Claude scans 240+ vetted partners and surfaces the three best fits for your brief.", tag: "STEP 02" },
+            { i: Sparkles, t: "We match manufacturers", d: "Our team reviews your brief and surfaces the three best-fit verified manufacturers for your requirement.", tag: "STEP 02" },
             { i: MessageSquare, t: "Quote → chat → ship", d: "Manufacturers respond in-thread. Compare quotes, lead times, and start the build.", tag: "STEP 03" },
           ].map((s, i) => (
             <div key={i} className="editorial-card p-8" style={{ animation: `reveal 0.6s ease-out ${i * 100}ms both` }}>
@@ -152,36 +156,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* NETWORK NUMBER CARDS */}
-      <section className="max-w-[1400px] mx-auto px-6 lg:px-10 py-28">
-        <div className="grid lg:grid-cols-12 gap-10 mb-12">
-          <div className="lg:col-span-7">
-            <div className="overline mb-4">§ 03 — Network</div>
-            <h2 className="font-serif text-5xl lg:text-6xl font-light leading-none tracking-tight">
-              Verified manufacturers,<br /><em className="text-klein not-italic">on tap</em>.
-            </h2>
-          </div>
-          <div className="lg:col-span-4 lg:col-start-9 text-base text-[--muted-foreground] leading-relaxed self-end">
-            Our closed network is what makes bids competitive. Every manufacturer is verified — factory walkthrough, audits, references on file.
-          </div>
-        </div>
-
-        {networkStats && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {networkStats.by_category.map((row, i) => (
-              <div key={row.category} className="editorial-card p-7" data-testid={`network-card-${row.category.replace(/\s+/g, "-").toLowerCase()}`}>
-                <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-[--muted-foreground] mb-4">Nº{String(i + 1).padStart(2, "0")}</div>
-                <div className="font-serif text-6xl tracking-tight leading-none">{row.count}<span className="text-2xl text-klein ml-1">+</span></div>
-                <div className="overline mt-3 text-[10px]">{row.category} manufacturers</div>
-              </div>
-            ))}
-            {networkStats.by_category.length === 0 && (
-              <div className="col-span-full text-sm text-[--muted-foreground] font-mono">— Network warming up. Be the first brief.</div>
-            )}
-          </div>
-        )}
-      </section>
-
       {/* TRUST */}
       <section className="max-w-[1400px] mx-auto px-6 lg:px-10 py-28 grid lg:grid-cols-12 gap-10 items-center">
         <div className="lg:col-span-6 relative aspect-[4/5] order-2 lg:order-1">
@@ -189,7 +163,7 @@ export default function Landing() {
           <div className="absolute top-6 left-6 tag verified">VERIFIED PARTNER</div>
         </div>
         <div className="lg:col-span-5 lg:col-start-8 order-1 lg:order-2">
-          <div className="overline mb-4">§ 04 — Trust</div>
+          <div className="overline mb-4">§ 03 — Trust</div>
           <h2 className="font-serif text-5xl lg:text-6xl font-light leading-[0.95] tracking-tight mb-8">
             Every manufacturer, <em className="text-klein not-italic">verified</em>.
           </h2>

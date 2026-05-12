@@ -22,6 +22,10 @@ import StartNiche from "@/pages/StartNiche";
 import StartChat from "@/pages/StartChat";
 import SubCategorySelect from "@/pages/SubCategorySelect";
 import Blueprint from "@/pages/Blueprint";
+import About from "@/pages/About";
+import HowItWorks from "@/pages/HowItWorks";
+import TrustSafety from "@/pages/TrustSafety";
+import Contact from "@/pages/Contact";
 
 const ProtectedRoute = ({ children, roles }) => {
   const { user, loading } = useAuth();
@@ -59,6 +63,10 @@ function AppRouter() {
       <Route path="/start/chat" element={<StartChat />} />
       <Route path="/onboarding/sub-category" element={<ProtectedRoute roles={["buyer"]}><SubCategorySelect /></ProtectedRoute>} />
       <Route path="/blueprint/:niche/:subCategory" element={<ProtectedRoute roles={["buyer"]}><Blueprint /></ProtectedRoute>} />
+      <Route path="/about" element={<About />} />
+      <Route path="/how-it-works" element={<HowItWorks />} />
+      <Route path="/trust-safety" element={<TrustSafety />} />
+      <Route path="/contact" element={<Contact />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
