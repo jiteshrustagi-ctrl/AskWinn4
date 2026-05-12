@@ -445,13 +445,19 @@ async def get_rfq(rfq_id: str, user: dict = Depends(get_current_user)):
         raise HTTPException(404, "Not found")
     quotes = await db.quotes.find({"rfq_id": rfq_id}, {"_id": 0}).to_list(200)
     buyer = await db.users.find_one({"user_id": rfq["buyer_id"]}, {"_id": 0})
+    
+    # Batch-fetch all agent profiles to avoid N+1 queries
+    agent_ids = [q["agent_id"] for q in quotes]
+    agents_list = await db.agent_profiles.find({"agent_id": {"$in": agent_ids}}, {"_id": 0}).to_list(len(agent_ids)) if agent_ids else []
+    agents_by_id = {a["agent_id"]: a for a in agents_list}
+    
     is_buyer_owner = user["role"] == "buyer" and rfq["buyer_id"] == user["user_id"]
     is_admin = user["role"] == "admin"
     is_winner = False
     # Phase 3 / spec sheet: Anonymise vendor identity for buyers until they accept a winner.
     # Only the winning quote (post-accept) reveals identity.
     for q in quotes:
-        ag = await db.agent_profiles.find_one({"agent_id": q["agent_id"]}, {"_id": 0})
+        ag = agents_by_id.get(q["agent_id"])
         if user["role"] == "agent" and q["agent_user_id"] == user["user_id"] and q.get("status") == "won":
             is_winner = True
         if user["role"] == "agent" and q["agent_user_id"] != user["user_id"]:
