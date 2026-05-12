@@ -97,7 +97,7 @@ export default function AgentProfileEdit() {
       <Navbar />
       <div className="max-w-3xl mx-auto px-6 lg:px-10 py-16">
         <div className="overline mb-4">§ VENDOR PROFILE</div>
-        <h1 className="font-serif text-5xl lg:text-6xl font-light leading-none tracking-tight mb-10">Your <em className="text-klein not-italic">story</em>.</h1>
+        <h1 className="font-serif text-5xl lg:text-6xl font-light leading-none tracking-tight mb-10">Manage Your <em className="text-klein not-italic">Profile</em></h1>
 
         <form onSubmit={save} className="space-y-10" data-testid="profile-form">
           <Section label="Brand">

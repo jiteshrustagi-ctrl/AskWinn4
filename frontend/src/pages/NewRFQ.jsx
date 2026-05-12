@@ -6,11 +6,30 @@ import { API } from "@/context/AuthContext";
 import { toast } from "sonner";
 import { Upload, X, FileText, ArrowRight } from "lucide-react";
 
-const CATEGORIES = ["Textile & Apparel", "Consumer Electronics", "Packaging", "Home Goods", "Beauty & Cosmetics", "Food & Beverage", "Hardware", "Toys & Games"];
-const REGIONS = ["Any", "India", "China", "Vietnam", "Turkey", "Mexico", "Portugal", "Italy", "USA"];
+const CATEGORIES = ["Jewellery", "Apparel & Textile", "Beauty & Cosmetics", "Home Decor & Goods", "Food & Nutrition", "Fitness & Wellness", "Corporate Gifting", "Consumer Electronics"];
+
+const BUDGET_RANGES = [
+  "₹50,000 – ₹1,00,000",
+  "₹1,00,000 – ₹5,00,000",
+  "₹5,00,000 – ₹15,00,000",
+  "₹15,00,000 – ₹50,00,000",
+  "₹50,00,000+"
+];
+
+const TIMELINE_OPTIONS = [
+  "1–4 weeks (urgent — discuss with team)",
+  "1–2 months",
+  "2–4 months",
+  "4+ months / flexible"
+];
 
 const BUDGET_FROM_RANGE = {
-  "Under ₹1 L": 80000, "₹1–5 L": 300000, "₹5–15 L": 1000000, "₹15–50 L": 3000000, "₹50 L+": 7500000,
+  "₹1–5 L": 300000, "₹5–15 L": 1000000, "₹15–50 L": 3000000, "₹50 L+": 7500000,
+  "₹50,000 – ₹1,00,000": 75000,
+  "₹1,00,000 – ₹5,00,000": 300000,
+  "₹5,00,000 – ₹15,00,000": 1000000,
+  "₹15,00,000 – ₹50,00,000": 3000000,
+  "₹50,00,000+": 7500000,
 };
 
 export default function NewRFQ() {
@@ -27,10 +46,9 @@ export default function NewRFQ() {
     title: "",
     description: answers.product_idea || "",
     category: initialCategory,
-    target_region: "India",
     quantity: 100,
-    budget_usd: prefillBudget, // stored field name kept; UI labels as ₹
-    timeline: prefillTimeline,
+    budget_range: answers.budget_range || BUDGET_RANGES[1],
+    timeline: answers.timeline || TIMELINE_OPTIONS[1],
   });
   const [requirements, setRequirements] = useState({});
   const [schema, setSchema] = useState(null);
@@ -129,24 +147,23 @@ export default function NewRFQ() {
                   {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
                 </select>
               </Field>
-              <Field label="Preferred region">
-                <select className="input-underline" value={form.target_region} onChange={(e) => set("target_region", e.target.value)} data-testid="rfq-region">
-                  {REGIONS.map((c) => <option key={c}>{c}</option>)}
-                </select>
-              </Field>
               <Field label="Quantity">
                 <input type="number" min="1" required className="input-underline" value={form.quantity} onChange={(e) => set("quantity", e.target.value)} data-testid="rfq-qty" />
               </Field>
-              <Field label="Budget (₹ INR)">
-                <input type="number" min="0" required className="input-underline" value={form.budget_usd} onChange={(e) => set("budget_usd", e.target.value)} data-testid="rfq-budget" />
+              <Field label="Budget range">
+                <select className="input-underline" value={form.budget_range} onChange={(e) => set("budget_range", e.target.value)} data-testid="rfq-budget">
+                  {BUDGET_RANGES.map((b) => <option key={b}>{b}</option>)}
+                </select>
               </Field>
-              <Field label="Timeline" className="md:col-span-2">
-                <input required className="input-underline" value={form.timeline} onChange={(e) => set("timeline", e.target.value)} placeholder="e.g. 8 weeks to delivery" data-testid="rfq-timeline" />
+              <Field label="Timeline">
+                <select className="input-underline" value={form.timeline} onChange={(e) => set("timeline", e.target.value)} data-testid="rfq-timeline">
+                  {TIMELINE_OPTIONS.map((t) => <option key={t}>{t}</option>)}
+                </select>
               </Field>
             </div>
             <div className="flex gap-4 pt-6">
               <button type="submit" className="btn-primary" data-testid="rfq-next-1">
-                {schema ? "Next: detailed brief" : "Next: review"} <ArrowRight className="w-4 h-4" />
+                {schema ? "Next: detailed brief" : "Next: review details"} <ArrowRight className="w-4 h-4" />
               </button>
               <button type="button" onClick={() => nav(-1)} className="btn-outline">Cancel</button>
             </div>
@@ -202,7 +219,7 @@ export default function NewRFQ() {
           <div className="space-y-6" data-testid="rfq-form-step3">
             <div className="editorial-card p-6 border-l-4 border-l-klein">
               <div className="overline mb-2">✓ RFQ POSTED</div>
-              <p className="text-sm">Now attach tech packs, mood boards or spec sheets — agents will see them when reviewing your brief.</p>
+              <p className="text-sm">Now attach tech packs, mood boards or spec sheets — manufacturers will see them when reviewing your brief.</p>
             </div>
 
             <label className="editorial-card p-10 border-dashed border-2 border-[--border-soft] hover:border-klein flex flex-col items-center cursor-pointer transition-colors" data-testid="rfq-upload-zone">

@@ -78,7 +78,7 @@ export default function StartNiche() {
 
         <div className="mt-16 text-center">
           <p className="text-sm text-[--muted-foreground]">
-            Don't see your category? <a href="mailto:experts@askwinn.in?subject=Custom%20brief%20-%20outside%20listed%20niches" className="underline" data-testid="other-niche-expert-link">Talk to an expert →</a>
+            Don't see your category? <a href="mailto:askwinnb2b@gmail.com?subject=Custom%20brief%20-%20outside%20listed%20niches" className="underline" data-testid="other-niche-expert-link">Talk to an expert →</a>
           </p>
         </div>
       </div>

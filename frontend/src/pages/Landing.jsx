@@ -59,7 +59,7 @@ export default function Landing() {
               <button onClick={() => startLogin("agent")} className="btn-accent" data-testid="hero-agent-btn">
                 <Factory className="w-4 h-4" /> Manufacturer sign in
               </button>
-              <a href="mailto:experts@askwinn.in?subject=I'd%20like%20to%20talk%20to%20an%20AskWinn%20expert" className="btn-outline" data-testid="hero-expert-btn">
+              <a href="mailto:askwinnb2b@gmail.com?subject=I'd%20like%20to%20talk%20to%20an%20AskWinn%20expert" className="btn-outline" data-testid="hero-expert-btn">
                 <MessageSquare className="w-4 h-4" /> Talk to an expert
               </a>
             </div>

@@ -13,7 +13,7 @@ export default function MyRFQs() {
     axios.get(`${API}/rfqs`).then((r) => setRfqs(r.data));
   }, []);
 
-  const title = user.role === "buyer" ? "My RFQs" : user.role === "agent" ? "Open Briefs" : "All RFQs";
+  const title = user.role === "buyer" ? "My RFQs" : user.role === "agent" ? "Active RFPs to Participate" : "All RFQs";
 
   return (
     <div className="min-h-screen bg-bone">

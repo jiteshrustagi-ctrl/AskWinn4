@@ -161,14 +161,7 @@ export default function RFQDetail() {
           <span className={`tag ${rfq.status === "open" ? "verified" : ""}`}>{rfq.status}</span>
         </div>
         <h1 className="font-serif text-5xl lg:text-6xl font-light leading-none tracking-tight mb-6">{rfq.title}</h1>
-        <div className="font-mono text-xs text-[--muted-foreground] mb-4">FROM {buyer_name?.toUpperCase()}{buyer_anonymised ? " · IDENTITY HIDDEN UNTIL ACCEPT" : ""} · {new Date(rfq.created_at).toLocaleDateString()}</div>
-        {isAgent && rfq.status === "open" && (
-          <div className="mb-8">
-            <button onClick={passRfq} disabled={passing} className="btn-outline text-xs" data-testid="pass-rfq-btn">
-              <X className="w-3 h-3" /> Pass on this RFQ
-            </button>
-          </div>
-        )}
+        <div className="font-mono text-xs text-[--muted-foreground] mb-8">FROM {buyer_name?.toUpperCase()}{buyer_anonymised ? " · IDENTITY HIDDEN UNTIL ACCEPT" : ""} · {new Date(rfq.created_at).toLocaleDateString()}</div>
 
         {isBuyer && (
           <div className="editorial-card p-6 mb-8" data-testid="rfq-share-panel">
