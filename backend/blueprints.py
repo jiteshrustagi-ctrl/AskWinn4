@@ -81,9 +81,6 @@ NICHES = [
         "sub_categories": ["Audio", "Wearables", "Smart home", "Mobile accessories"],
     },
 ]
-        "sub_categories": ["Wooden", "Soft toys", "Educational", "Board games"],
-    },
-]
 
 
 # Curated Blueprints keyed by (niche, sub_category)
