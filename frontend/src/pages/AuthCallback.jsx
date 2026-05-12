@@ -19,6 +19,11 @@ export default function AuthCallback() {
     }
     const sessionId = match[1];
     const desiredRole = localStorage.getItem("askwinn_desired_role");
+    
+    // Check if we have funnel data to resume the buyer journey
+    const funnelComplete = sessionStorage.getItem("askwinn_funnel_complete");
+    const funnelNiche = sessionStorage.getItem("askwinn_funnel_niche");
+    
     (async () => {
       try {
         const r = await axios.post(
@@ -29,8 +34,14 @@ export default function AuthCallback() {
         localStorage.removeItem("askwinn_desired_role");
         setUser(r.data);
         window.history.replaceState({}, document.title, window.location.pathname);
+        
+        // Handle routing based on role and context
         if (r.data.role === "unassigned") {
           nav("/select-role", { replace: true, state: { user: r.data } });
+        } else if (r.data.role === "buyer" && funnelComplete === "1" && funnelNiche) {
+          // Resume buyer funnel - go to sub-category selection
+          sessionStorage.removeItem("askwinn_funnel_complete");
+          nav(`/onboarding/sub-category?niche=${funnelNiche}`, { replace: true });
         } else if (r.data.role === "agent") {
           nav("/profile/edit", { replace: true, state: { user: r.data } });
         } else {
