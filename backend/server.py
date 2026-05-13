@@ -804,9 +804,14 @@ async def evaluate_bids_endpoint(rfq_id: str, user: dict = Depends(get_current_u
     if user["role"] not in ("buyer", "admin"):
         raise HTTPException(403, "Buyers only")
     quotes = await db.quotes.find({"rfq_id": rfq_id}, {"_id": 0}).to_list(200)
+    
+    # Batch-fetch all agent profiles to avoid N+1 queries
+    agent_ids = [q["agent_id"] for q in quotes]
+    agents_list = await db.agent_profiles.find({"agent_id": {"$in": agent_ids}}, {"_id": 0}).to_list(len(agent_ids)) if agent_ids else []
+    agents_by_id = {a["agent_id"]: a for a in agents_list}
+    
     for q in quotes:
-        ag = await db.agent_profiles.find_one({"agent_id": q["agent_id"]}, {"_id": 0})
-        q["agent"] = ag
+        q["agent"] = agents_by_id.get(q["agent_id"])
     result = await evaluate_bids_llm(rfq, quotes)
     return result
 
