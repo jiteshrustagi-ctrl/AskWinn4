@@ -9,10 +9,22 @@ import { ArrowUpRight } from "lucide-react";
 
 export default function StartNiche() {
   const [niches, setNiches] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const nav = useNavigate();
 
   useEffect(() => {
-    axios.get(`${API}/niches`).then((r) => setNiches(r.data));
+    setLoading(true);
+    axios.get(`${API}/niches`)
+      .then((r) => {
+        setNiches(r.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to load niches:", err);
+        setError("Failed to load categories. Please refresh the page.");
+        setLoading(false);
+      });
   }, []);
 
   const pick = (n) => {
@@ -20,6 +32,17 @@ export default function StartNiche() {
     sessionStorage.setItem("askwinn_funnel_niche_label", n.label);
     nav(`/start/chat?niche=${n.key}`);
   };
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-bone flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-600 mb-4">{error}</p>
+          <button onClick={() => window.location.reload()} className="btn-primary">Retry</button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-bone">
@@ -50,7 +73,16 @@ export default function StartNiche() {
           </div>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4" data-testid="niches-grid">
+        {loading ? (
+          <div className="text-center py-20">
+            <div className="font-mono text-sm">Loading categories...</div>
+          </div>
+        ) : niches.length === 0 ? (
+          <div className="text-center py-20">
+            <div className="font-mono text-sm text-red-600">No categories available. Please contact support.</div>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4" data-testid="niches-grid">
           {niches.map((n, i) => {
             const Icon = Icons[n.icon] || Icons.Box;
             return (
@@ -75,6 +107,7 @@ export default function StartNiche() {
             );
           })}
         </div>
+        )}
 
         <div className="mt-16 text-center">
           <p className="text-sm text-[--muted-foreground]">
